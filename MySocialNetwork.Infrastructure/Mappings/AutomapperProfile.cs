@@ -15,6 +15,9 @@ namespace MySocialNetwork.Infrastructure.Mappings
         {
             CreateMap<Post, PostDTO>();
             CreateMap<PostDTO, Post>();
+
+            CreateMap<Security, SecurityDTO>();
+            CreateMap<SecurityDTO, Security>();
         }
     }
 }

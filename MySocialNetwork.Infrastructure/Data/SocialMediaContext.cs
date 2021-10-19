@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using MySocialNetwork.Core.Entities;
+using MySocialNetwork.Core.Enumerations;
 
 #nullable disable
 
@@ -21,6 +22,7 @@ namespace MySocialNetwork.Infrastructure.Data
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Security> Securities { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -103,7 +105,7 @@ namespace MySocialNetwork.Infrastructure.Data
                 entity.Property(e => e.Id)
                   .HasColumnName("IdUser");
 
-                entity.ToTable("User");
+                entity.ToTable("User"); 
 
                 entity.Property(e => e.BirthDate).HasColumnType("date");
 
@@ -125,6 +127,39 @@ namespace MySocialNetwork.Infrastructure.Data
                 entity.Property(e => e.Phone)
                     .HasMaxLength(10)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Security>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                  .HasColumnName("IdSecurity");
+
+                entity.ToTable("Security");
+
+                entity.Property(e => e.User)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Role)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .HasConversion(
+                    x => x.ToString(),
+                    x => (RoleType)Enum.Parse(typeof(RoleType), x));
             });
 
             OnModelCreatingPartial(modelBuilder);
